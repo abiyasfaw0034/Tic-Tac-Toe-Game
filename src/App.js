@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { Play } from "./Play";
+import { Restart } from "./Restart";
+import { Currentplayer } from "./Currentplayer";
 
 export default function App() {
   const [player1, setPlayer1] = useState("X");
@@ -13,25 +16,25 @@ export default function App() {
       newBoard[index] = player1;
       setBoard(newBoard);
       checkscore(newBoard);
-      setTurn("O"); // Switch turns
+      setTurn("O");
     } else if (board[index] === null && turn === "O") {
       const newBoard = [...board];
       newBoard[index] = player2;
       setBoard(newBoard);
       checkscore(newBoard);
-      setTurn("X"); // Switch turns
+      setTurn("X");
     }
   }
   function checkscore(board) {
     const winningConditions = [
       [0, 1, 2],
       [3, 4, 5],
-      [6, 7, 8], // Rows
+      [6, 7, 8],
       [0, 3, 6],
       [1, 4, 7],
-      [2, 5, 8], // Columns
+      [2, 5, 8],
       [0, 4, 8],
-      [2, 4, 6], // Diagonals
+      [2, 4, 6],
     ];
 
     for (let condition of winningConditions) {
@@ -40,7 +43,7 @@ export default function App() {
         setwinner(board[a] === player1 ? "Player 1" : "Player 2");
         const intervalId = setInterval(() => {
           handleRestart();
-          clearInterval(intervalId); // Clear the interval
+          clearInterval(intervalId);
         }, 1000);
         return;
       }
@@ -50,8 +53,6 @@ export default function App() {
       setwinner("It's a tie!");
     }
   }
-
-  // Check for tie
   if (board.every((cell) => cell)) {
     setwinner("It's a tie");
   }
@@ -69,59 +70,6 @@ export default function App() {
       <Currentplayer turn={turn} winner={winner} />
       <Play board={board} handlepick={handlepick} />
       <Restart onRestart={handleRestart} />
-    </div>
-  );
-}
-function Play({ board, handlepick }) {
-  return (
-    <>
-      <div className="shefagn"></div>
-      <div className="playground">
-        {board.map((cell, index) => (
-          <button
-            value={index}
-            className="btn"
-            onClick={() => handlepick(index)}
-          >
-            {cell}
-          </button>
-        ))}
-      </div>
-    </>
-  );
-}
-function Restart({ onRestart }) {
-  return (
-    <div className="res">
-      <button className="btn-reset" onClick={() => onRestart()}>
-        Restart game
-      </button>
-    </div>
-  );
-}
-
-function Currentplayer({ turn, winner }) {
-  let style = {
-    fontSize: "x-large",
-    marginLeft: "38%",
-  };
-  if (winner) {
-    style = {
-      fontSize: "x-large",
-      marginLeft: "32%",
-      fontColor: "green",
-    };
-  }
-
-  return (
-    <div className="turn">
-      <div style={style}>
-        {winner
-          ? `The winner is ${winner}`
-          : turn === "X"
-          ? "Player 1 turn"
-          : "Player 2 turn"}
-      </div>
     </div>
   );
 }
